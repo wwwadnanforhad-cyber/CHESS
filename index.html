@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHESS Token App</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --background-color: #0a0a0a;
+            --card-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --secondary-text-color: #a0a0a0;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px 20px 80px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Page styles */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .balance-card h2 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--secondary-text-color);
+        }
+
+        .balance-card .balance {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .action-btn {
+            background-color: var(--card-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 500;
+        }
+
+        .action-btn i {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+
+        .action-btn:hover {
+            background-color: #252525;
+            border-color: var(--primary-color);
+        }
+
+        .main-btn {
+            background-color: var(--primary-color);
+            font-size: 18px;
+            font-weight: 600;
+            justify-content: center;
+            border: none;
+        }
+
+        .main-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .section {
+            background-color: var(--card-color);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .section h3 {
+            margin-top: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--secondary-text-color);
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: calc(100% - 22px);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: #2a2a2a;
+            color: var(--text-color);
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .withdraw-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .withdraw-btn:hover {
+            background-color: #218838;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: var(--secondary-text-color);
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .profile-info p {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--primary-color);
+        }
+        .profile-info p strong {
+            color: var(--secondary-text-color);
+        }
+
+        /* Staking Plan Styles */
+        .staking-options {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+        }
+        .staking-plan {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            flex-grow: 1;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .staking-plan:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.15);
+        }
+        .staking-plan h4 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+        .staking-plan p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: var(--secondary-text-color);
+        }
+        .staking-plan p strong {
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        /* Navigation Bar Styles */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--card-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+            border-top: 1px solid var(--border-color);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888888;
+            cursor: pointer;
+            font-size: 12px;
+            transition: color 0.3s;
+            flex-grow: 1;
+        }
+        .nav-item i {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        /* Notification System Styles */
+        #notification {
+            position: fixed;
+            top: -100px; /* Initially hidden */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2a2a2a;
+            color: var(--text-color);
+            padding: 12px 25px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            transition: top 0.5s ease-in-out;
+            border: 1px solid var(--border-color);
+        }
+
+        #notification.show {
+            top: 20px;
+        }
+        
+        #notification.success i { color: var(--success-color); }
+        #notification.info i { color: var(--primary-color); }
+        #notification.error i { color: #dc3545; }
+
+    </style>
+</head>
+<body>
+    
+    <!-- Notification Element -->
+    <div id="notification">
+        <i id="notification-icon" class="fas fa-check-circle"></i>
+        <span id="notification-message">This is a notification!</span>
+    </div>
+
+    <div class="container">
+
+        <!-- ===== DASHBOARD PAGE ===== -->
+        <div id="dashboard-page" class="page active">
+            <div class="header">
+                <img src="https://i.postimg.cc/9MYB6p9P/images-1.png" alt="Bot Pic">
+                <h1>CHESS Dashboard</h1>
+            </div>
+            <div class="balance-card">
+                <h2>Your Balance</h2>
+                <p class="balance"><span id="balance">0.00</span> CHESS</p>
+            </div>
+            <div class="section">
+                <h3>Get a Bonus!</h3>
+                <p style="text-align: center; font-size: 14px; margin-top: -10px; margin-bottom: 20px;">Join our channel to get a 1 CHESS bonus.</p>
+                <button class="action-btn" onclick="joinTelegram()"><i class="fab fa-telegram-plane"></i>Join Telegram Channel</button>
+            </div>
+            <button class="action-btn" onclick="dailyCheckIn()"><i class="fas fa-calendar-check"></i> Daily Check-in</button>
+            <button class="action-btn" onclick="openHelpBot()">
+                <i class="fas fa-question-circle"></i> Contact Help Bot
+            </button>
+        </div>
+
+        <!-- ===== ADS PAGE ===== -->
+        <div id="ads-page" class="page">
+             <div class="header"><h1>Watch & Earn</h1></div>
+            <div class="section">
+                <h3>Watch Ads & Earn</h3>
+                <p class="info-text">Watch 10 ads to earn 1 CHESS token.</p>
+                <p class="info-text" style="margin-bottom: 20px;">Daily Limit: 100 Ads (10 CHESS)</p>
+                <button class="action-btn main-btn" onclick="watchAd()">
+                    <i class="fas fa-video"></i> Watch an Ad
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== REFER PAGE ===== -->
+        <div id="refer-page" class="page">
+            <div class="header"><h1>Referral Program</h1></div>
+            <div class="section">
+                <h3>Invite & Earn</h3>
+                <p style="text-align:center; margin-top:-10px; color: var(--secondary-text-color);">Invite friends and earn 10% of their earnings forever!</p>
+                <div class="input-group">
+                    <label for="referral-link">Your Unique Referral Link</label>
+                    <input type="text" id="referral-link" value="https://t.me/your_bot?start=6957378947" readonly>
+                </div>
+                <button class="action-btn" onclick="shareOnTelegram()" style="justify-content:center; background-color: #0088cc; color: white; border:none;">
+                    <i class="fab fa-telegram-plane" style="color:white;"></i> Share on Telegram
+                </button>
+            </div>
+            <div class="section">
+                <h3>Your Referrals</h3>
+                <div class="profile-info">
+                     <p><strong>Total Referrals:</strong> <span id="referralCount">0</span></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ===== USER ACTIVITIES PAGE ===== -->
+        <div id="activities-page" class="page">
+             <div class="header"><h1>Activities</h1></div>
+            <div class="section">
+                <h3>Withdraw CHESS</h3>
+                <div class="input-group">
+                    <label for="chess-address">CHESS Wallet Address</label>
+                    <input type="text" id="chess-address" placeholder="Enter your CHESS wallet address">
+                </div>
+                <div class="input-group">
+                    <label for="withdraw-amount">Amount (Min: 25 CHESS)</label>
+                    <input type="number" id="withdraw-amount" placeholder="25">
+                </div>
+                <button class="withdraw-btn" onclick="withdraw()">Withdraw</button>
+                <p class="info-text">Daily withdrawal limit: 25 CHESS</p>
+            </div>
+            <div class="section">
+                <h3>Stake CHESS & Earn</h3>
+                <div class="staking-options">
+                    <div class="staking-plan">
+                        <h4>Daily Plan</h4>
+                        <p><strong>1%</strong> Daily</p>
+                        <p>Min: 10 CHESS</p>
+                    </div>
+                    <div class="staking-plan">
+                        <h4>7-Day Plan</h4>
+                        <p><strong>5%</strong> Weekly</p>
+                        <p>Min: 50 CHESS</p>
+                    </div>
+                </div>
+                <div class="input-group" style="margin-top: 20px;">
+                    <label for="stake-amount">Amount to Stake</label>
+                    <input type="number" id="stake-amount" placeholder="Enter CHESS amount">
+                </div>
+                <button class="action-btn" style="background-color:var(--primary-color); justify-content:center; color:white; border:none;" onclick="stake()">
+                    Stake Now
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== PROFILE PAGE ===== -->
+        <div id="profile-page" class="page">
+            <div class="header"><h1>Your Profile</h1></div>
+            <div class="section">
+                <h3>Your Profile</h3>
+                <div class="profile-info">
+                    <p><strong>User ID:</strong> <span id="userId">6957378947</span></p>
+                </div>
+            </div>
+            <div class="section">
+                <h3>Today's Statistics</h3>
+                <div class="profile-info">
+                     <p><strong>Today's Earnings:</strong> <span id="dailyProfit">0.00 CHESS</span></p>
+                     <p><strong>Ads Watched Today:</strong> <span id="adsWatchedCount">0</span></p>
+                </div>
+            </div>
+            <div class="section">
+                <h3>Overall Statistics</h3>
+                <div class="profile-info">
+                     <p><strong>Total Withdrawn:</strong> <span id="totalWithdrawn">0.00 CHESS</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== NAVIGATION BAR ===== -->
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="showPage('dashboard-page')">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="showPage('ads-page')">
+            <i class="fas fa-play-circle"></i>
+            <span>Ads</span>
+        </div>
+        <div class="nav-item" onclick="showPage('refer-page')">
+            <i class="fas fa-user-friends"></i>
+            <span>Refer</span>
+        </div>
+        <div class="nav-item" onclick="showPage('activities-page')">
+            <i class="fas fa-stream"></i>
+            <span>Activities</span>
+        </div>
+        <div class="nav-item" onclick="showPage('profile-page')">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </div>
+    </div>
+
+    <script>
+        // --- Notification System ---
+        const notification = document.getElementById('notification');
+        const notificationIcon = document.getElementById('notification-icon');
+        const notificationMessage = document.getElementById('notification-message');
+        let notificationTimer;
+
+        function showNotification(message, type = 'success') {
+            clearTimeout(notificationTimer);
+
+            // Set icon and style
+            notification.className = ''; // Reset classes
+            if (type === 'success') {
+                notificationIcon.className = 'fas fa-check-circle';
+                notification.classList.add('success');
+            } else if (type === 'info') {
+                notificationIcon.className = 'fas fa-info-circle';
+                notification.classList.add('info');
+            } else if (type === 'error') {
+                notificationIcon.className = 'fas fa-exclamation-circle';
+                notification.classList.add('error');
+            }
+
+            notificationMessage.innerText = message;
+            notification.classList.add('show');
+            
+            notificationTimer = setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000); // Hide after 3 seconds
+        }
+
+        // --- Mock Data (Replace with backend calls) ---
+        let userBalance = 0.00;
+        let adsWatchedToday = 0;
+        let dailyProfit = 0.00;
+        let totalWithdrawn = 0.00;
+        let referralCount = 0;
+        const dailyAdLimit = 100;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            showPage('dashboard-page');
+        });
+
+        function updateUI() {
+            document.getElementById('balance').innerText = userBalance.toFixed(2);
+            document.getElementById('userId').innerText = '6957378947';
+            document.getElementById('adsWatchedCount').innerText = `${adsWatchedToday} / ${dailyAdLimit}`;
+            document.getElementById('dailyProfit').innerText = `${dailyProfit.toFixed(2)} CHESS`;
+            document.getElementById('totalWithdrawn').innerText = `${totalWithdrawn.toFixed(2)} CHESS`;
+            document.getElementById('referralCount').innerText = referralCount;
+        }
+        
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('onclick').includes(pageId)) {
+                    item.classList.add('active');
+                }
+            });
+        }
+        
+        function creditEarnings(amount, source) {
+            userBalance += amount;
+            dailyProfit += amount;
+            updateUI();
+            showNotification(`${amount.toFixed(2)} CHESS earned from ${source}!`, 'success');
+        }
+
+        function watchAd() {
+            if (adsWatchedToday >= dailyAdLimit) {
+                showNotification('You have reached your daily ad limit.', 'error');
+                return;
+            }
+            adsWatchedToday++;
+            creditEarnings(0.1, 'watching an ad');
+        }
+        
+        function dailyCheckIn() {
+             // Backend should handle the reward logic to prevent abuse.
+             showNotification('Daily Check-in claimed!', 'success');
+        }
+
+        function joinTelegram() {
+            showNotification('Verification pending. Bonus will be added soon.', 'info');
+            window.open('https://t.me/zillearn', '_blank');
+        }
+
+        function withdraw() {
+            const amountInput = document.getElementById('withdraw-amount');
+            const address = document.getElementById('chess-address').value;
+            const amount = parseFloat(amountInput.value);
+            
+            if (!address.trim()) {
+                showNotification('Please enter a valid wallet address.', 'error');
+                return;
+            }
+            if (!amount || amount < 25) {
+                showNotification('Minimum withdrawal amount is 25 CHESS.', 'error');
+                return;
+            }
+            if (amount > userBalance) {
+                showNotification('Insufficient balance.', 'error');
+                return;
+            }
+
+            userBalance -= amount;
+            totalWithdrawn += amount;
+            updateUI();
+            amountInput.value = '';
+            document.getElementById('chess-address').value = '';
+            showNotification(`Withdrawal for ${amount} CHESS submitted.`, 'success');
+        }
+        
+        function stake() {
+            const stakeAmountInput = document.getElementById('stake-amount');
+            const stakeAmount = parseFloat(stakeAmountInput.value);
+
+            if (!stakeAmount || stakeAmount < 10) {
+                 showNotification('Minimum amount to stake is 10 CHESS.', 'error');
+                 return;
+            }
+            if (stakeAmount > userBalance) {
+                showNotification('Insufficient balance to stake.', 'error');
+                return;
+            }
+            
+            let plan = (stakeAmount >= 50) ? "7-Day Plan" : "Daily Plan";
+            // Backend will lock the funds and start the staking process.
+            userBalance -= stakeAmount; // Assuming funds are deducted immediately
+            updateUI();
+            stakeAmountInput.value = '';
+            showNotification(`Staked ${stakeAmount} CHESS in the ${plan}.`, 'success');
+        }
+        
+        function shareOnTelegram() {
+            const referralLink = document.getElementById('referral-link').value;
+            const text = encodeURIComponent(`Hey! Join this awesome CHESS bot and earn free tokens. Use my link to get started: ${referralLink}`);
+            const shareUrl = `https://t.me/share/url?url=${referralLink}&text=${text}`;
+            window.open(shareUrl, '_blank');
+        }
+        
+        function openHelpBot() {
+            window.open('http://t.me/CHEEShelp_bot', '_blank');
+        }
+
+    </script>
+</body>
+</html>
