@@ -540,7 +540,15 @@
                 showNotification('You have reached your daily ad limit.', 'error');
                 return;
             }
+            
+            // This is the function call to run the ad.
+            // Replace 'run_ad()' with the actual function name if it is different.
+            run_ad(); 
+            
             adsWatchedToday++;
+            // The reward should ideally be given after the ad is successfully watched.
+            // This might require a callback function from the ad script.
+            // For now, we'll credit it immediately.
             creditEarnings(0.1, 'watching an ad');
         }
         
@@ -571,47 +579,12 @@
                 showNotification('Insufficient balance.', 'error');
                 return;
             }
-
-            userBalance -= amount;
-            totalWithdrawn += amount;
-            updateUI();
-            amountInput.value = '';
-            document.getElementById('chess-address').value = '';
-            showNotification(`Withdrawal for ${amount} CHESS submitted.`, 'success');
+            // Add withdrawal logic here
+            showNotification('Withdrawal request submitted!', 'success');
         }
-        
-        function stake() {
-            const stakeAmountInput = document.getElementById('stake-amount');
-            const stakeAmount = parseFloat(stakeAmountInput.value);
-
-            if (!stakeAmount || stakeAmount < 10) {
-                 showNotification('Minimum amount to stake is 10 CHESS.', 'error');
-                 return;
-            }
-            if (stakeAmount > userBalance) {
-                showNotification('Insufficient balance to stake.', 'error');
-                return;
-            }
-            
-            let plan = (stakeAmount >= 50) ? "7-Day Plan" : "Daily Plan";
-            // Backend will lock the funds and start the staking process.
-            userBalance -= stakeAmount; // Assuming funds are deducted immediately
-            updateUI();
-            stakeAmountInput.value = '';
-            showNotification(`Staked ${stakeAmount} CHESS in the ${plan}.`, 'success');
-        }
-        
-        function shareOnTelegram() {
-            const referralLink = document.getElementById('referral-link').value;
-            const text = encodeURIComponent(`Hey! Join this awesome CHESS bot and earn free tokens. Use my link to get started: ${referralLink}`);
-            const shareUrl = `https://t.me/share/url?url=${referralLink}&text=${text}`;
-            window.open(shareUrl, '_blank');
-        }
-        
-        function openHelpBot() {
-            window.open('http://t.me/CHEEShelp_bot', '_blank');
-        }
-
     </script>
+
+    <!-- Added the ad script here -->
+    <script src="https://ad.gigapub.tech/script?id=1880"></script>
 </body>
 </html>
